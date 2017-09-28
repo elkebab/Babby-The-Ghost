@@ -1,11 +1,10 @@
 from random import randint
 
 def _get_move(ai, map):
-
 	if not ai.you.is_dangerous and not ai.enemy.is_dangerous: # Nobody dang
 		path = map.get_breadth_first_path(ai.you.pos, char_goal=map.icon.super_pellet)
 		move = map.get_move_between(ai.you.pos, path[0])
-		return move
+		return move		
 
 	elif ai.you.is_dangerous and not ai.enemy.is_dangerous: # I'm dang, enemy is not
 		path = map.get_breadth_first_path(ai.you.pos, pos_goal=ai.enemy.pos)
@@ -13,6 +12,19 @@ def _get_move(ai, map):
 		return move
 
 	elif ai.enemy.is_dangerous and not ai.you.is_dangerous: # Enemy is dang, I am not
+		try:
+			path = map.get_breadth_first_path(ai.you.pos, pos_goal=ai.enemy.pos)
+
+			if (len(path) < 2):
+				move = map.get_move_between(ai.you.pos, path[0])
+				if (move == 0): return 2
+				if (move == 1): return 3
+				if (move == 2): return 0
+				if (move == 3): return 1
+				return move
+		except:
+			pass
+
 		if (map.super_pellets_left > 0):
 			path = map.get_breadth_first_path(ai.you.pos, char_goal=map.icon.super_pellet)
 			move = map.get_move_between(ai.you.pos, path[0])
